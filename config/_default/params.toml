@@ -62,7 +62,7 @@ highlight_languages = ["matlab", "latex", "python"]  # Add support for highlight
 
 # Enable LaTeX math rendering? true/false
 #   If false, you can enable math on a per page basis as needed.
-math = math
+math = true
 
 # Enable diagram rendering? true/false
 #   If false, you can enable diagrams on a per page basis as needed.
