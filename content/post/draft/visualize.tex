@@ -1,0 +1,64 @@
+% !TEX root = ../../visionnotes.tex
+%\bibliography{../../reference}
+
+\chapter{Visualization}
+
+\section{Code Implementation}
+
+\subsection{Gluon Visualization Script 解读}
+
+\href{https://mxnet.apache.org/versions/1.4.1/tutorials/vision/cnn_visualization.html}{教程链接}
+
+
+真正执行可视化命令的代码如下：
+\begin{python}
+show_images(*visualize(network, "hummingbird.jpg", last_conv_layer_name))
+\end{python}
+
+\noindent 其中，\pyth{show_images} 具体的定义如下，就是将图像显式出来
+\begin{python}
+def show_images(pred_str, images):
+    titles = [pred_str, 'Grad-CAM', 'Guided Grad-CAM', 'Saliency Map']
+    num_images = len(images)
+    fig=plt.figure(figsize=(15,15))
+    rows, cols = 1, num_images
+    for i in range(num_images):
+        fig.add_subplot(rows, cols, i+1)
+        plt.xlabel(titles[i])
+        img = images[i].astype(np.uint8)
+        plt.imshow(img, cmap='gray' if i==num_images-1 else None)
+    plt.show()
+\end{python}
+
+这个 \pyth{pred_str} 是由下面这个函数返回的、由类名 + 类号组成的字符串，例如 `jellyfish (107)'、`snow leopard (289)' 。
+
+\begin{python}
+def get_class_name(cls_id):
+    return "%s (%d)" % (synset[cls_id], cls_id)
+\end{python}
+
+\subsection{我怎么改动？}
+
+\subsubsection{heatmap 颠倒}
+
+如果不是可视化最后的卷积层（last\_conv\_layer），那么 heatmap 可能颠倒，怎么把它正过来呢？把 \pyth{gradcam.visualize} 里面的
+\begin{python}
+img_heatmap = get_img_heatmap(orig_img, cam)
+\end{python}
+改成
+\begin{python}
+img_heatmap = get_img_heatmap(orig_img, 255 - cam)
+\end{python}
+
+
+\subsubsection{怎么在我自己的网络上实现可视化}
+
+第一步，对于自己的网络，load 好权重，作为 \pyth{pretrained_net}。
+
+第二步，出于可视化的需求，\pyth{gradcam.py} 中实现了自己的 \pyth{Conv2D} 和 \pyth{Activation}，在自己网络的实现中，将原来的 \pyth{nn.Conv2D} 和 \pyth{nn.Activation} 替换为 \pyth{gradcam.py} 中实现了自己的 \pyth{Conv2D} 和 \pyth{Activation}，得到新的 \pyth{net}
+
+第三步，通过 \pyth{net.collect_params()[newkey].set_data(param.data())} 将 \pyth{pretrained_net} 中权重赋值给 \pyth{net}
+
+
+
+
