@@ -43,17 +43,17 @@ projects: []
       + 实质上是在运行 `IterBasedRunner` 类的 `train` 函数: `train(iter_loaders[0](), **kwargs)`
       + 从 `while self.iter < self._max_iters:` 可以看到, 这个 `train` 函数一共会被调用 `self._max_iters` 次
       + 从中也可以看到这个 `train` 函数其实只负责做一个 batch 数据的 forward 计算
-    2. Validation 模式, 此处其实没有运行
+   2. Validation 模式, 此处其实没有运行
       + `mmseg` 的所有 setting 都是 `workflow = [('train', 1)]`
       + 实际上的 validation 是通过在 `after_train_epoch` 节点调用 `EvalHook` 对象的 `after_train_iter` 方法实现的。
-5. Level 4: 转进到 `IterBasedRunner` 类的 `train` 函数内部
-   1. 读取一个 batch 的数据: `data_batch = next(data_loader)`
-   2. 调用 model 的 `train_step` 函数计算 `loss: outputs = self.model.train_step(data_batch)`
-   3. 尝试选择性进行 validation：`self.call_hook('after_train_iter')` 
+5.  Level 4: 转进到 `IterBasedRunner` 类的 `train` 函数内部
+    1. 读取一个 batch 的数据: `data_batch = next(data_loader)`
+    2. 调用 model 的 `train_step` 函数计算 `loss: outputs = self.model.train_step(data_batch)`
+    3. 尝试选择性进行 validation：`self.call_hook('after_train_iter')` 
       + 实质上是调用 `EvalHook` 类实例的 `after_train_iter` 函数;
-6. Level 5: 转进到 `EvalHook` 类实例的 `after_train_iter` 函数内部: 
-   1. 如果当前迭代数不能够被 `interval` 整除, 就不做 validation: `if not self.every_n_iters(runner, self.interval): return`
-   2. 如果能被整除, 计算一下 validation set 上的结果: `results = single_gpu_test(model, dataloader)`
+6.  Level 5: 转进到 `EvalHook` 类实例的 `after_train_iter` 函数内部: 
+    1. 如果当前迭代数不能够被 `interval` 整除, 就不做 validation: `if not self.every_n_iters(runner, self.interval): return`
+    2. 如果能被整除, 计算一下 validation set 上的结果: `results = single_gpu_test(model, dataloader)`
       + 这一步就是 `enumerate` 一下 `data_loader`, 对于每个 batch 都用 model forward 一下, 把 result 都 append 起来得到一个 list `results`, 就不再展开了
-   3. 对于分割结果再调用 dataset 的 `evaluate` 函数计算一下 mIoU, mDice, mFscore 等 metric 数值    
+    3. 对于分割结果再调用 dataset 的 `evaluate` 函数计算一下 mIoU, mDice, mFscore 等 metric 数值    
       + 其实就是通过调用下 `mmseg.core` 里面的 `eval_metrics` 函数调用 `total_intersect_and_union` 函数计算下上述数值
