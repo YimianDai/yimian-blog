@@ -1,5 +1,5 @@
 ---
-title: Open-MMLab 的 Hook 机制
+title: OpenMMLab 的 Hook 机制
 authors:
 - admin
 tags: []
