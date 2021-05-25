@@ -34,7 +34,7 @@ projects: []
 + rgb(128, 0, 128) 代表 bottle 类
 + rgb(224, 224, 192) 代表各个物体的边缘, 并没有被分配具体的类别
 
-![](https://raw.githubusercontent.com/YimianDai/imgbed/master/blog/voc-pillow/2007_000346.png)
+![](./2007_000346.png)
 
 `PascalVOCDataset` 的 `CLASSES` 与其调色盘 `PALETTE` 具体如下:
 
