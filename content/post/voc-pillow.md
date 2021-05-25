@@ -1,5 +1,5 @@
 ---
-title: 天衣无缝: Pascal VOC Dataset 与 Pillow 的调色盘
+title: Pascal VOC Dataset 与 Pillow 的调色盘
 authors:
 - admin
 tags: []
