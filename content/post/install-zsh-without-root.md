@@ -55,8 +55,10 @@ make install
 每次 `exec $HOME/bin/zsh -l` 只能手动的进入 `zsh`，那么有什么方法可以在登录的时候就自动进入 `zsh` 呢？
 可以将 `exec ~/bin/zsh` 写入 `~/.bashrc` 就可以在登录 `bash` 的时候自动跳转到 `zsh` 了, 当然这个代价是以后只要运行 `bash`，就会自动跳转到 `zsh` 。需要 `source ~/.bashrc` 一下使其生效。
 
-另外，初始的 zsh 啥都没有，安装好的 `conda` 环境之类的也都不知道，只需要将 `~/.bashrc` 中的关于 `conda` 的设置复制粘贴进 `~/.zshrc` 即可。
-最后，`source ~/.zshrc` 一下就生效了。
+另外，初始的 `zsh` 啥都没有，安装好的 `conda` 环境之类的也都不知道，只需要将 `~/.bashrc` 中的关于 `conda` 的设置复制粘贴进 `~/.zshrc` 即可。
+`source ~/.zshrc` 一下就生效了。
+
+此外，在 `zsh` 下，可能还会遇到 `source activate <env_name>` 失效，报错 `source: no such file or directory: activate`. 只需要将 `export PATH="/root/miniconda3/bin:$PATH"` 写入 `~/.zshrc` 即可，注意 `/root/miniconda3/bin` 是我的 `miniconda` 的路径，需要将其替换成你本地的路径。在 `zsh` 中跑一句，`conda init zsh` 则可以使得 `conda activate <env_name>` 生效。最后，都需要 `source ~/.zshrc` 一下。
 
 ## 安装 `oh-my-zsh`
 
