@@ -1,0 +1,1 @@
+Column Selection: Shift + Command + 左键 (注意是左键)

@@ -25,6 +25,7 @@ projects: []
 - [为什么要设计 Hook 机制？](#为什么要设计-hook-机制)
 - [Hook 机制的工作流程](#hook-机制的工作流程)
 - [Hook 机制的底层实现](#hook-机制的底层实现)
+- [示例：`mmseg` 中的 Hooks](#示例mmseg-中的-hooks)
 
 ## 为什么要设计 Hook 机制？
 
@@ -195,4 +196,13 @@ def register_hook(self, hook, priority='NORMAL'):
         self._hooks.insert(0, hook)
 ```
 
-<!-- 怎么让 Runner 类知道去调用正确的 Hook 函数? -->
+## 示例：`mmseg` 中的 Hooks
+
+在下图中，我整理了 `mmseg` 的 `tools/train.py` 整个运行周期中会用到的所有 hooks 对应的具体的 Hook 类以及相应被调用的时刻。
+
+![](https://raw.githubusercontent.com/YimianDai/imgbed/master/blog/mmlab-hook/Hooks.png)
+
+另外，以 `IterBasedRunner` 为例，整理了这些 Hooks 被调用的时刻以及相应的优先级（先后顺序）。
+
+![](https://raw.githubusercontent.com/YimianDai/imgbed/master/blog/mmlab-hook/mmseg-hooks-priority.png)
+
