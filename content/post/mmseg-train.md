@@ -57,3 +57,7 @@ projects: []
       + 这一步就是 `enumerate` 一下 `data_loader`, 对于每个 batch 都用 model forward 一下, 把 result 都 append 起来得到一个 list `results`, 就不再展开了
     3. 对于分割结果再调用 dataset 的 `evaluate` 函数计算一下 mIoU, mDice, mFscore 等 metric 数值    
       + 其实就是通过调用下 `mmseg.core` 里面的 `eval_metrics` 函数调用 `total_intersect_and_union` 函数计算下上述数值
+
+上面的文字并不直观，我用思维导图的形式重新仔细梳理了一下 `mmseg` 运行 `tools/train.py` 中的所有流程细节，具体如下：
+
+![](https://raw.githubusercontent.com/YimianDai/imgbed/master/blog/mmseg-train/mmseg-tools-train.png)
