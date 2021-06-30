@@ -1,5 +1,5 @@
 ---
-title: Web Tools for Deep Learning
+title: PyTorch for MXNet User
 authors:
 - admin
 tags: []
@@ -22,8 +22,16 @@ image:
 projects: []
 ---
 
+| PyTorch | MXNet | Notes |
+| --- | --- | --- |
+| `.item()` | `.asscalar()` | |
+| `.numpy()` | `.asnumpy()` | |
+| `.from_numpy()` | `.array()` | |
+| `device = torch.device("cuda")` | `ctx = mx.gpu()` | |
+| `x = x.to(device)` | `x = x.as_in_context(ctx)` | |
 
+参考
 
-[Receptive Field Calculator](https://fomoro.com/research/article/receptive-field-calculator): 计算感受野大小
+1. [MXNet for PyTorch users in 10 minutes](https://medium.com/apache-mxnet/mxnet-for-pytorch-users-in-10-minutes-a7353863406a)
+2. [NumPy for MATLAB users](https://numpy.org/doc/stable/user/numpy-for-matlab-users.html)
 
-[Netscope](http://ethereon.github.io/netscope/quickstart.html): Caffe prototxt 可视化

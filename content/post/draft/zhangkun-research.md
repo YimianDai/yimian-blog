@@ -1,5 +1,5 @@
 ---
-title: VS Code
+title: 
 authors:
 - admin
 tags: []
@@ -22,4 +22,5 @@ image:
 projects: []
 ---
 
-Column Selection: Shift + Command + 左键 (注意是左键)
+改写一下[网叔](https://www.zhihu.com/people/wang-shu-8-34)整理的[张坤投资思想](https://zhuanlan.zhihu.com/p/365357066).
+

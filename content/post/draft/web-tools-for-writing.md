@@ -1,5 +1,5 @@
 ---
-title: VS Code
+title: Web Tools for Writing
 authors:
 - admin
 tags: []
@@ -22,4 +22,17 @@ image:
 projects: []
 ---
 
-Column Selection: Shift + Command + 左键 (注意是左键)
+
+[Markdown Formatter](https://codebeautify.org/markdown-formatter)
+
+[Markdown Table Generator](https://www.tablesgenerator.com/markdown_tables)
+
+[LaTeX Table Generator](https://www.tablesgenerator.com/latex_tables)
+
+[Title Case Converter](https://titlecaseconverter.com/)
+
+[ACRONYMIFY!](http://acronymify.com/)
+
+[TinyPNG](https://tinypng.com/): 图像压缩
+
+[Squoosh](https://squoosh.app/): 图像压缩

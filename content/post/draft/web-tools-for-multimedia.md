@@ -1,5 +1,5 @@
 ---
-title: PyTorch for MXNet User
+title: Web Tools for Multimedia
 authors:
 - admin
 tags: []
@@ -22,8 +22,10 @@ image:
 projects: []
 ---
 
-参考
+[Nvidia - Image Inpainting](https://www.nvidia.com/research/inpainting/index.html): 图像修复, 图像内容移除
 
-1. [MXNet for PyTorch users in 10 minutes](https://medium.com/apache-mxnet/mxnet-for-pytorch-users-in-10-minutes-a7353863406a)
-2. [NumPy for MATLAB users](https://numpy.org/doc/stable/user/numpy-for-matlab-users.html)
+[搞定抠图](https://koutu.gaoding.com/): 在线删除图片背景
 
+[图片换背景](https://koutu.gaoding.com/entertainment)
+
+[证件照](https://koutu.gaoding.com/passport)
