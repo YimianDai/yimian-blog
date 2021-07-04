@@ -41,15 +41,18 @@ OpenMMLab 系列的一大特色是其所采用的 Hook 机制。
 面向对象编程的思想是职责分配，将功能分散到不同的对象类中，在不同的类里设计不同的方法。
 如果两个类 A、B 都需要用到同一种方法，那么可以将该方法写在一个独立的类 C 中，然后那两个类各自继承这个类 C。
 然而这么做有两个问题。
-第一个问题在于，对于不具有多继承特性的语言，比如 Java，继承了类 C 就不能继承其他类了，如果类 C 中的功能并不是类 A、B 的主要功能，那通过继承类 C 来获取其方法就行不通了。简单粗暴的解决方案是各自在类 A、B 中实现类 C 中的那个子函数，这样的话，一模一样的代码就存在于两处，代码的重复性大大增加。如果你要修改该方法，也必须两处都修改。两处还可以 handle，如果这种情况有 m 个，每个重复 n 处呢？
-第二个问题在于，即使能够继承，类 A、B 就和类 C 耦合在一起了，如果存在一个跟类 C 具有相似但不同子函数的类 D，我希望能够让类 A、B 通过用户配置选项动态地选择是调用类 C 还是类 D 中的子函数，那么这种直接继承的方案也没法提供这种动态选择的灵活性。
-本质上，除了继承之外，面向对象编程所追求的封装特性斩断了类与类之间的联系和共享，而为了降低代码的重复性、**提升软件的模块化水平**，需要将分散在各个类内的重复代码统一起来，两者之间就存在了矛盾。
 
-这种**在程序运行时，动态地将所需要的代码切入到类的指定方法、指定位置上的编程思想**就是**面向切面编程**。
-其中，几个类共同需要调用的、为此被抽取出来的代码片段叫作**切面**，其会在程序运行时被切入到指定类的指定方法中，而被切入的那些类、那些方法叫作切入点。
+第一个问题在于，对于不具有多继承特性的语言，比如 Java，继承了类 C 就不能继承其他类了，如果类 C 中的功能并不是类 A、B 的主要功能，那通过继承类 C 来获取其方法就行不通了。简单粗暴的解决方案是各自在类 A、B 中实现类 C 中的那个子函数，这样的话，**一模一样的代码就存在于两处，代码的重复性大大增加**。如果你要修改该方法，也必须两处都修改。两处还可以 handle，如果这种情况有 m 个，每个重复 n 处呢？
+
+第二个问题在于，即使能够继承，类 A、B 就和类 C 耦合在一起了，如果存在一个跟类 C 具有相似但不同子函数的类 D，我希望能够让类 A、B 通过用户配置选项动态地选择是调用类 C 还是类 D 中的子函数，那么这种直接继承的方案也没法提供这种**动态选择的灵活性**。
+
+本质上，除了继承之外，面向对象编程所追求的封装特性斩断了**类与类之间的联系和共享**. 然而, 为了降低代码的重复性、提升软件的模块化水平，需要将分散在各个类内的重复代码统一起来，两者之间就存在了矛盾。
+
+这种**在程序运行时，动态地**将所需要的代码切入到类的指定方法、指定位置上的编程思想就是**面向切面编程**。
+其中，**几个类共同需要调用的**、为此被抽取出来的代码片段叫作**切面**，其会在程序运行时被切入到指定类的指定方法中，而被切入的那些类、那些方法叫作**切入点**。
 面向切面编程，使得我们可以把和当前的业务逻辑无关的部分抽到单独的一层中去，实现无侵入式的功能扩展。
 
-正是借由 Hook 机制，OpenMMLab 系列能够对网络实现以及算法训练、测试流程进行抽象和解耦，从而达到了相当高度的模块化水平。
+正是借由 Hook 机制，OpenMMLab 系列能够对网络实现以及算法训练、测试流程进行抽象和解耦，从而达到了相当高度的模块化水平, 即重复代码大大减少。
 
 ## Hook 机制的工作流程
 
@@ -59,19 +62,25 @@ Hook 机制, 其实并不是 OpenMMLab 的特例，只是由于我代码经验�
 钩子编程 (hooking) ，是计算机程序设计术语，指通过拦截软件模块间的函数调用、消息传递、事件传递来修改或扩展操作系统、应用程序或其他软件组件的程序执行流程。
 其中，处理被拦截的函数调用、事件、消息的代码，被称为钩子 (hook) ，应该也就是前文 AOP 编程里面的切面。
 
-在 OpenMMLab 中，Hook 机制是由 Runner 类 (比如 `IterBasedRunner`, `EpochBasedRunner`) 和 HOOK 类 (比如 `EvalHook`) 配合完成的, 共同构成一套训练框架的架构规范. 
+在 OpenMMLab 中，Hook 机制是由 `Runner` 类 (比如 `IterBasedRunner`, `EpochBasedRunner`) 和 `HOOK` 类 (比如 `EvalHook`) 配合完成的, 共同构成一套训练框架的架构规范.
 
-首先, 在 OpenMMLab 中, 定义好了 Hook 类, 如下所示, 其定义了一堆对应训练流程中各个步骤/时刻/节点的钩子函数, 等待被 Runner 类实例调用, 用于完成特定的功能. 
-比如, 在网络训练流程中每个或者隔几个 `after_epoch` 时刻, 可以调用想用的钩子函数从而完成对 validation set 的 evaluation.
-当然, 下面这个 Hook 类是最最原始的实现, 也就是基本什么功能都没有实现. 
-如果想定义一些操作, 实现一些功能，可以继承这个类并定制我们需要的功能, 比如 `mmcv.runner.hooks.evaluation` 模块中的 `EvalHook` 类继承了最最原始的 `Hook` 类, 将里面的子函数基本都具体实现了一下;
-而 `mmseg.core.evaluation` 模块中的 `EvalHook` 类则进一步继承了前一个 `EvalHook` 类, 重写了 `after_train_iter` 和 `after_train_epoch` 两个子函数.
+首先, 在 OpenMMLab 中, 负责网络训练测试全流程的 `Runner` 类在训练测试周期中定义好了一系列**触发器**, 如下所示:
 
 ```Python
-from mmcv.utils import Registry
+# 省略 ...
+self.call_hook('before_train_epoch')
+for i, data_batch in enumerate(self.data_loader):
+    # 省略 ...
+    self.call_hook('before_train_iter')
+    # 省略 ...
+    self.call_hook('after_train_iter')
+    # 省略 ...
+self.call_hook('after_train_epoch')  
+```
 
-HOOKS = Registry('hook')
+其次, 在与 `Runner` 类配合的 `Hook` 类及其子类中, 也定义了一堆与上面 Runner 类的触发器中 `before_run`, `before_epoch`, `before_train_iter`, `after_train_iter`, `after_epoch`, `after_run` 等步骤/时刻/节点同名的函数, 被称之为**钩子函数**, 如下所示:
 
+```Python
 class Hook:
 
     def before_run(self, runner):
@@ -95,27 +104,20 @@ class Hook:
     # ... 省略
 ```
 
-其次, 在 OpenMMLab 的定义好的各个 Runner 类中, 事先在其运行函数 `run`, `train` 中的各个节点, 比如 `before_run`, `before_epoch`, `before_iter`, `after_iter`, `after_epoch`, `after_run` 这些, call 指定的钩子函数, 比如 `self.call_hook('after_train_iter')`. 
-下面 `EpochBasedRunner` 的 `train` 函数的一部分 call hook 函数的代码:
+当然, 上面这个 Hook 类是最最原始的实现, 也就是基本什么功能都没有实现.
+如果想定义一些操作, 实现一些功能，可以继承这个类并定制我们需要的功能, 比如 `mmcv.runner.hooks.evaluation` 模块中的 `EvalHook` 类继承了最最原始的 `Hook` 类, 将里面的子函数基本都具体实现了一下;
+而 `mmseg.core.evaluation` 模块中的 `EvalHook` 类则进一步继承了前一个 `EvalHook` 类, 重写了 `after_train_iter` 和 `after_train_epoch` 两个子函数.
 
-```Python
-# 省略 ...
-self.call_hook('before_train_epoch')
-for i, data_batch in enumerate(self.data_loader):
-    # 省略 ...
-    self.call_hook('before_train_iter')
-    # 省略 ...
-    self.call_hook('after_train_iter')
-    # 省略 ...
-self.call_hook('after_train_epoch')  
-```
-这些被 call 的钩子函数, 比如 EvalHook 类中的 `after_train_iter` 函数会进一步会调用 `mmseg.apis.test` 模块中的 `single_gpu_test` 函数计算 validation set 上的结果, 再调用 `dataset` 的 `evaluate` 函数计算出 mIoU, mDice, mFscore 等 metric 数值. 
+有了相互配合的 Runner 类和 Hook 类之后, Runner 类实例运行到特定时刻, 就会通过触发器函数调用各个 Hook 类中的钩子函数, 从而完成特定的功能.
+例如, 每个或者隔几个 `after_epoch` 或者 `after_train_iter` 触发器时刻, 可以通过 `EvalHook` 的 `after_train_iter` 函数调用
+`_do_evaluate` 函数完成对 validation set 的 evaluation.
+
+<!-- 这些被 call 的钩子函数, 比如 EvalHook 类中的 `after_train_iter` 函数会进一步会调用 `mmseg.apis.test` 模块中的 `single_gpu_test` 函数计算 validation set 上的结果, 再调用 `dataset` 的 `evaluate` 函数计算出 mIoU, mDice, mFscore 等 metric 数值.  -->
 
 
-个人感觉, 这套 Hook 机制很像通信系统里面的**轮流询问**机制.
+个人感觉, 这套 Hook 机制很像通信系统里面的**轮流询问**机制, 是**一套在算法生命周期中规定好了种种操作的训练框架规范**.
 其之所以起作用，是因为在 Runner 类的被调用方法中, 每一个节点都规定了 call 相应 hook 函数的操作.
 Runner 类在训练过程中会依次轮流询问端口, 也就是依次 call 下每个节点的 hook 函数, 如果对应钩子函数有被专门定制过, 那就执行下该功能. 如果没有, 那就是个空函数, 直接 pass 了, 继续执行下一步，从而实现了拦截模块间的函数调用、消息传递、事件传递，从而修改或扩展组件的行为.
-
 
 ## Hook 机制的底层实现
 
