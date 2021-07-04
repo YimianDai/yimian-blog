@@ -60,4 +60,4 @@ projects: []
 
 上面的文字并不直观，我用思维导图的形式重新仔细梳理了一下 `mmseg` 运行 `tools/train.py` 中的所有流程细节，具体如下：
 
-![](https://raw.githubusercontent.com/YimianDai/imgbed/master/blog/mmseg-train/mmseg-tools-train.png)
+![](https://yimiandai.coding.net/p/blog/d/imgbed/git/raw/master/blog/mmseg-train/mmseg-tools-train.png)
